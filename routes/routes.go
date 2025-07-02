@@ -4,9 +4,14 @@ import (
 	"github/mrcsmotta1/go-rest-api-alura/controllers"
 	"log"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 func HandleRequests() {
-	http.HandleFunc("/", controllers.Home)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	r := mux.NewRouter()
+	r.HandleFunc("/", controllers.Home)
+	r.HandleFunc("/api/personalidades", controllers.GetPersonalidades).Methods("GET")
+	r.HandleFunc("/api/personalidades/{id}", controllers.GetPersonalidadeByID).Methods("GET")
+	log.Fatal(http.ListenAndServe(":8080", r))
 }
