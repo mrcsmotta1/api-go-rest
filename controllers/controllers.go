@@ -25,9 +25,13 @@ func GetPersonalidadeByID(w http.ResponseWriter, r *http.Request) {
 	id := vars["id"]
 	var personalidade models.Personalidade
 	database.DB.First(&personalidade, id)
-	json.NewEncoder(w).Encode(personalidade)
 
-	http.Error(w, "Personalidade not found", http.StatusNotFound)
+	if personalidade.ID == 0 {
+		http.Error(w, "Personalidade not found", http.StatusBadRequest)
+		return
+	}
+
+	json.NewEncoder(w).Encode(personalidade)
 }
 
 func CreatePersonalidade(w http.ResponseWriter, r *http.Request) {
