@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github/mrcsmotta1/go-rest-api-alura/controllers"
+	"github/mrcsmotta1/go-rest-api-alura/middleware"
 	"log"
 	"net/http"
 
@@ -10,6 +11,7 @@ import (
 
 func HandleRequests() {
 	r := mux.NewRouter()
+	r.Use(middleware.ContentTypeMiddleware)
 	r.HandleFunc("/", controllers.Home)
 	r.HandleFunc("/api/personalidades", controllers.GetPersonalidades).Methods("GET")
 	r.HandleFunc("/api/personalidades/{id}", controllers.GetPersonalidadeByID).Methods("GET")
