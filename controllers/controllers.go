@@ -57,3 +57,22 @@ func DeletePersonalidade(w http.ResponseWriter, r *http.Request) {
 	database.DB.Delete(&personalidade)
 	w.WriteHeader(http.StatusNoContent)
 }
+
+func UpdatePersonalidade(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+	var personalidade models.Personalidade
+	database.DB.First(&personalidade, id)
+	if personalidade.ID == 0 {
+		http.Error(w, "Personalidade not found", http.StatusNotFound)
+		return
+	}
+	err := json.NewDecoder(r.Body).Decode(&personalidade)
+	if err != nil {
+		http.Error(w, "Invalid input", http.StatusBadRequest)
+		return
+	}
+	database.DB.Save(&personalidade)
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(personalidade)
+}
