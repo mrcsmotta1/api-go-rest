@@ -42,3 +42,18 @@ func CreatePersonalidade(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(personalidade)
 }
+
+func DeletePersonalidade(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+	var personalidade models.Personalidade
+	database.DB.First(&personalidade, id)
+
+	if personalidade.ID == 0 {
+		http.Error(w, "Personalidade not found", http.StatusNotFound)
+		return
+	}
+
+	database.DB.Delete(&personalidade)
+	w.WriteHeader(http.StatusNoContent)
+}
