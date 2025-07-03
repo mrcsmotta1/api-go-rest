@@ -29,3 +29,16 @@ func GetPersonalidadeByID(w http.ResponseWriter, r *http.Request) {
 
 	http.Error(w, "Personalidade not found", http.StatusNotFound)
 }
+
+func CreatePersonalidade(w http.ResponseWriter, r *http.Request) {
+	var personalidade models.Personalidade
+	err := json.NewDecoder(r.Body).Decode(&personalidade)
+	if err != nil {
+		http.Error(w, "Invalid input", http.StatusBadRequest)
+		return
+	}
+
+	database.DB.Create(&personalidade)
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(personalidade)
+}
